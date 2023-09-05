@@ -1,10 +1,13 @@
-package com.dasial.motivation
+package com.dasial.motivation.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.dasial.motivation.infra.Constants
+import com.dasial.motivation.R
+import com.dasial.motivation.infra.Shared
 import com.dasial.motivation.databinding.ActivityUserBinding
 
 class UserActivity : AppCompatActivity(), View.OnClickListener {
@@ -21,7 +24,10 @@ class UserActivity : AppCompatActivity(), View.OnClickListener {
 
         supportActionBar?.hide()
 
+        verifyUserExist()
+
     }
+
 
     override fun onClick(v: View?) {
 
@@ -31,22 +37,32 @@ class UserActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    private fun navigateToHome() {
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun handleSave() {
-        val name = binding.editTextName.text.toString()
+        val nameInput = binding.editTextName.text.toString()
 
-        if (name != "") {
+        if (nameInput != "") {
+            Shared(this).saveString(Constants.KEY.USER_NAME, nameInput)
+            navigateToHome()
 
-            Shared(this).saveString("USER_NAME",name)
-
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            finish()
         } else {
             Toast.makeText(
                 applicationContext,
                 R.string.validation_mandatory_name,
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    private fun verifyUserExist() {
+        val name = Shared(this).getString(Constants.KEY.USER_NAME)
+        if (name != "") {
+            navigateToHome()
         }
     }
 }

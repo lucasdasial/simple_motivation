@@ -1,4 +1,4 @@
-package com.dasial.motivation
+package com.dasial.motivation.infra
 
 import android.content.Context
 import android.content.SharedPreferences
