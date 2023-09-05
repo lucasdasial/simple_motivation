@@ -1,13 +1,14 @@
 package com.dasial.motivation.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.dasial.motivation.R
+import com.dasial.motivation.data.Mock
+import com.dasial.motivation.databinding.ActivityMainBinding
 import com.dasial.motivation.infra.Constants
 import com.dasial.motivation.infra.Shared
-import com.dasial.motivation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -31,45 +32,53 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         handleUser()
         handleFilter(R.id.img_all)
+        handleNextPhrase()
     }
 
     override fun onClick(v: View) {
 
-        if(v.id == R.id.btn_new_phrase){
-            var s = ""
-        }else if ( v.id in listOf(R.id.img_all, R.id.img_happy, R.id.img_sunny)){
+        if (v.id == R.id.btn_new_phrase) {
+            handleNextPhrase()
+        } else if (v.id in listOf(R.id.img_all, R.id.img_happy, R.id.img_sunny)) {
             handleFilter(v.id)
         }
 
 
     }
 
-    private fun handleUser(){
+    private fun handleUser() {
         val name = Shared(this).getString(Constants.KEY.USER_NAME)
         b.textHello.text = "Olá, $name"
     }
 
-    private fun handleFilter(id:Int) {
+    private fun handleFilter(id: Int) {
 
-        b.imgAll.setColorFilter(ContextCompat.getColor(this,R.color.dark_purple))
-        b.imgSunny.setColorFilter(ContextCompat.getColor(this,R.color.dark_purple))
-        b.imgHappy.setColorFilter(ContextCompat.getColor(this,R.color.dark_purple))
+        b.imgAll.setColorFilter(ContextCompat.getColor(this, R.color.dark_purple))
+        b.imgSunny.setColorFilter(ContextCompat.getColor(this, R.color.dark_purple))
+        b.imgHappy.setColorFilter(ContextCompat.getColor(this, R.color.dark_purple))
 
         when (id) {
             R.id.img_all -> {
                 categoryId = Constants.FILTER.ALL
-                b.imgAll.setColorFilter(ContextCompat.getColor(this,R.color.white))
+                b.imgAll.setColorFilter(ContextCompat.getColor(this, R.color.white))
             }
+
             R.id.img_sunny -> {
                 categoryId = Constants.FILTER.SUNNY
-                b.imgSunny.setColorFilter(ContextCompat.getColor(this,R.color.white))
+                b.imgSunny.setColorFilter(ContextCompat.getColor(this, R.color.white))
             }
+
             R.id.img_happy -> {
                 categoryId = Constants.FILTER.HAPPY
-                b.imgHappy.setColorFilter(ContextCompat.getColor(this,R.color.white))
+                b.imgHappy.setColorFilter(ContextCompat.getColor(this, R.color.white))
 
             }
         }
     }
 
+    private fun handleNextPhrase() {
+        val phrase = Mock().getPhrase(categoryId)
+
+        b.textPhrase.text = phrase
+    }
 }
